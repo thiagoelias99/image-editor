@@ -1,5 +1,9 @@
+import ImageInputForm from "@/components/image-input-form"
+
 export default function HomePage() {
   return (
-    <div>HomePage</div>
+    <div>
+      <ImageInputForm />
+    </div>
   )
 }
