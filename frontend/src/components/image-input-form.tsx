@@ -12,11 +12,14 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import ImageInput from "./ui/image-input"
+import { Input } from "./ui/input"
 
 const formSchema = z.object({
   image: z
     .instanceof(File, { message: 'O arquivo precisa ser uma imagem.' })
     .refine((file) => file.type.startsWith('image/'), 'O arquivo precisa ser uma imagem.'),
+  title: z.string().optional(),
+  alt: z.string().optional(),
 })
 
 export default function ImageInputForm() {
@@ -24,6 +27,8 @@ export default function ImageInputForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       image: undefined,
+      title: undefined,
+      alt: undefined
     },
   })
 
@@ -40,7 +45,6 @@ export default function ImageInputForm() {
             name="image"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>Imagem</FormLabel>
                 <FormControl>
                   <ImageInput {...field} />
                 </FormControl>
@@ -48,6 +52,33 @@ export default function ImageInputForm() {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Título (<i>opcional</i>)</FormLabel>
+                <FormControl>
+                  <Input placeholder="Digite o título da imagem" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="alt"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Descrição (<i>opcional</i>)</FormLabel>
+                <FormControl>
+                  <Input placeholder="Digite a descrição da imagem para acessibilidade" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <Button type="submit" className="w-full">Enviar</Button>
         </form>
       </Form>
