@@ -5,6 +5,7 @@ import HomePage from "./pages/home"
 import ImagesPage from "./pages/images"
 import LoginPage from "./pages/login"
 import RegisterPage from "./pages/register"
+import LogoutPage from "./pages/logout"
 
 export default function AppRouter() {
   return (
@@ -18,6 +19,7 @@ export default function AppRouter() {
           <Route path="login" element={<LoginPage />} />
           <Route path="cadastro" element={<RegisterPage />} />
         </Route>
+        <Route path="/logout" element={<LogoutPage />} />
         <Route path="*" element={<h1>404</h1>} />
       </Routes>
     </BrowserRouter>

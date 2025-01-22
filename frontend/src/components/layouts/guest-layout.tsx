@@ -2,8 +2,7 @@ import { Outlet } from "react-router"
 
 export default function GuestLayout() {
   return (
-    <div>
-      <h1>Guest Layout</h1>
+    <div className="w-full h-screen flex justify-center items-center p-4">
       <Outlet />
     </div>
   )
