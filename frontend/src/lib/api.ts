@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import axios from "axios"
 import { NavigateFunction } from "react-router"
 
@@ -23,15 +24,6 @@ api.interceptors.response.use(
   },
   (error) => {
     console.error(error)
-
-    if (error.response) {
-      if (error.response.status === 401) {
-        localStorage.removeItem("ACCESS_TOKEN")
-        if (navigate) navigate("/login") // Navigate to login page
-      } else if (error.response.status === 404) {
-        if (navigate) navigate("/404") // Navigate to 404 page
-      }
-    }
 
     throw error
   }

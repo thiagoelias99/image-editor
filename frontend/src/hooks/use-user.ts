@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { api } from "@/lib/api"
 import { IUser, IUserLoginDTO, IUserLoginResponseDTO, IUserRegisterDTO } from "@/models/user"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
@@ -54,7 +55,8 @@ export const useUser = () => {
       setLoggedUser(responseData)
 
       return responseData
-    }
+    },
+    retry: false,
   })
 
   return {

@@ -15,6 +15,7 @@ import { z } from "@/lib/pt-zod"
 import { PasswordInput } from "@/components/ui/password-input"
 import { useNavigate } from "react-router"
 import { useUser } from "@/hooks/use-user"
+import { AxiosError } from "axios"
 
 const formSchema = z.object({
   name: z.string().nonempty().max(255),
@@ -50,6 +51,16 @@ export function RegisterForm() {
       await register(values)
       navigate('/')
     } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 422 && error.response.data.message === 'The email has already been taken.') {
+          alert("Houve um erro ao cadastrar o usuário.")
+          return
+        }
+        if ((error.response?.status || 0) >= 500) {
+          alert("Erro interno no servidor")
+          return
+        }
+      }
       console.error(error)
     }
   }

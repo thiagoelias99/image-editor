@@ -15,6 +15,7 @@ import { z } from "@/lib/pt-zod"
 import { PasswordInput } from "@/components/ui/password-input"
 import { useNavigate } from "react-router"
 import { useUser } from "@/hooks/use-user"
+import { AxiosError } from "axios"
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -38,6 +39,20 @@ export function LoginForm() {
       await login(values)
       navigate('/')
     } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 422) {
+          form.setError("password", {
+            type: "manual",
+            message: "Email ou senha incorretos",
+          })
+          return
+        }
+        if ((error.response?.status || 0) >= 500) {
+          alert("Erro interno no servidor")
+          return
+        }
+      }
+
       console.error(error)
     }
   }
