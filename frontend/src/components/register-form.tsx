@@ -17,35 +17,35 @@ import { api } from "@/lib/api"
 import { useNavigate } from "react-router"
 
 const formSchema = z.object({
-  fullName: z.string().nonempty().max(255),
+  name: z.string().nonempty().max(255),
   email: z.string().email(),
   password: z.string().nonempty().min(8),
-  confirmPassword: z.string().nonempty().min(8),
+  password_confirmation: z.string().nonempty().min(8),
 })
 
 export function RegisterForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullName: "",
+      name: "",
       email: "",
       password: "",
-      confirmPassword: "",
+      password_confirmation: "",
     },
   })
   const navigate = useNavigate()
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     //compare passwords
-    if (values.password !== values.confirmPassword) {
-      form.setError('confirmPassword', {
+    if (values.password !== values.password_confirmation) {
+      form.setError('password_confirmation', {
         type: 'manual',
         message: 'As senhas não conferem'
       })
       return
     }
 
-    api.post('/signup', values)
+    api.post('/register', values)
       .then(() => {
         navigate('/')
       })
@@ -66,7 +66,7 @@ export function RegisterForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
         <FormField
           control={form.control}
-          name="fullName"
+          name="name"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Nome Completo</FormLabel>
@@ -105,7 +105,7 @@ export function RegisterForm() {
         />
         <FormField
           control={form.control}
-          name="confirmPassword"
+          name="password_confirmation"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Confirmação de Senha</FormLabel>

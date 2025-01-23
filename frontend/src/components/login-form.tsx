@@ -13,12 +13,12 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "@/lib/pt-zod"
 import { PasswordInput } from "@/components/ui/password-input"
+import { api } from "@/lib/api"
+import { useNavigate } from "react-router"
 
 const formSchema = z.object({
-  fullName: z.string().nonempty().max(255),
   email: z.string().email(),
   password: z.string().nonempty().min(8),
-  confirmPassword: z.string().nonempty().min(8),
 })
 
 export function LoginForm() {
@@ -30,8 +30,13 @@ export function LoginForm() {
     },
   })
 
+  const navigate = useNavigate()
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+    api.post("/login", values)
+      .then(() => {
+        navigate('/')
+      })
   }
 
   return (

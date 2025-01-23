@@ -18,7 +18,10 @@ api.interceptors.request.use((request) => {
 // Add a response interceptor
 api.interceptors.response.use(
   (response) => {
-    // Any status code that lies within the range of 2xx causes this function to trigger
+    // Save the token in the local storage
+    if (response.data.token) {
+      localStorage.setItem("ACCESS_TOKEN", response.data.token)
+    }
     return response
   },
   (error) => {
