@@ -1,5 +1,5 @@
 import { Link } from "react-router"
-import { LoginForm } from "./partials/login-form"
+import { LoginForm } from "@/components/login-form"
 import {
   Card,
   CardContent,

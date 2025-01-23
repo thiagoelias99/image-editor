@@ -1,5 +1,4 @@
 import { Link } from "react-router"
-import { RegisterForm } from "./partials/register-form"
 import {
   Card,
   CardContent,
@@ -7,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { RegisterForm } from "@/components/register-form"
 
 export default function RegisterPage() {
   return (

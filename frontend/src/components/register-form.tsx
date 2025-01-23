@@ -13,6 +13,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "@/lib/pt-zod"
 import { PasswordInput } from "@/components/ui/password-input"
+import { api } from "@/lib/api"
+import { useNavigate } from "react-router"
 
 const formSchema = z.object({
   fullName: z.string().nonempty().max(255),
@@ -31,6 +33,7 @@ export function RegisterForm() {
       confirmPassword: "",
     },
   })
+  const navigate = useNavigate()
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     //compare passwords
@@ -42,7 +45,20 @@ export function RegisterForm() {
       return
     }
 
-    console.log(values)
+    api.post('/signup', values)
+      .then(() => {
+        navigate('/')
+      })
+      .catch((error) => {
+        console.error(error)
+
+        if (error.response?.status === 409) {
+          form.setError('email', {
+            type: 'manual',
+            message: 'Este email já está em uso'
+          })
+        }
+      })
   }
 
   return (
