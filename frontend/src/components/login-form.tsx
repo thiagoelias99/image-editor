@@ -13,8 +13,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "@/lib/pt-zod"
 import { PasswordInput } from "@/components/ui/password-input"
-import { api } from "@/lib/api"
 import { useNavigate } from "react-router"
+import { useUser } from "@/hooks/use-user"
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -22,6 +22,7 @@ const formSchema = z.object({
 })
 
 export function LoginForm() {
+  const { login, isWaitingForLogin } = useUser()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -32,11 +33,13 @@ export function LoginForm() {
 
   const navigate = useNavigate()
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    api.post("/login", values)
-      .then(() => {
-        navigate('/')
-      })
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      await login(values)
+      navigate('/')
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
@@ -68,7 +71,11 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        <Button className="w-full" type="submit">Entrar</Button>
+        <Button
+          isLoading={isWaitingForLogin}
+          className="w-full"
+          type="submit"
+        >Entrar</Button>
       </form>
     </Form>
   )

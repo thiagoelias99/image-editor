@@ -13,8 +13,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "@/lib/pt-zod"
 import { PasswordInput } from "@/components/ui/password-input"
-import { api } from "@/lib/api"
 import { useNavigate } from "react-router"
+import { useUser } from "@/hooks/use-user"
 
 const formSchema = z.object({
   name: z.string().nonempty().max(255),
@@ -24,6 +24,7 @@ const formSchema = z.object({
 })
 
 export function RegisterForm() {
+  const { register, isRegisteringUser } = useUser()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,7 +36,7 @@ export function RegisterForm() {
   })
   const navigate = useNavigate()
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     //compare passwords
     if (values.password !== values.password_confirmation) {
       form.setError('password_confirmation', {
@@ -45,20 +46,12 @@ export function RegisterForm() {
       return
     }
 
-    api.post('/register', values)
-      .then(() => {
-        navigate('/')
-      })
-      .catch((error) => {
-        console.error(error)
-
-        if (error.response?.status === 409) {
-          form.setError('email', {
-            type: 'manual',
-            message: 'Este email já está em uso'
-          })
-        }
-      })
+    try {
+      await register(values)
+      navigate('/')
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
@@ -116,7 +109,7 @@ export function RegisterForm() {
             </FormItem>
           )}
         />
-        <Button className="w-full" type="submit">Cadastrar</Button>
+        <Button className="w-full" type="submit" isLoading={isRegisteringUser}>Cadastrar</Button>
       </form>
     </Form>
   )

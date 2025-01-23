@@ -18,10 +18,7 @@ api.interceptors.request.use((request) => {
 // Add a response interceptor
 api.interceptors.response.use(
   (response) => {
-    // Save the token in the local storage
-    if (response.data.token) {
-      localStorage.setItem("ACCESS_TOKEN", response.data.token)
-    }
+
     return response
   },
   (error) => {
