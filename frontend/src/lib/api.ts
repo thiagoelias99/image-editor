@@ -41,6 +41,7 @@ api.interceptors.response.use(
 )
 
 // Function to set the navigation handler
+// Add to route components to enable navigation
 export const setNavigation = (navigateFunction: NavigateFunction) => {
   navigate = navigateFunction
 }
