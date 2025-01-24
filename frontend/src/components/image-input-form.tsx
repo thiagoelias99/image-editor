@@ -39,7 +39,6 @@ export default function ImageInputForm() {
     formData.append('image', values.image)
     if (values.title) formData.append('title', values.title)
     if (values.alt) formData.append('alt', values.alt)
-    console.log(formData)
     try {
       await uploadImage(formData)
 

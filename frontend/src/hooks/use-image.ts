@@ -19,12 +19,19 @@ export const useImages = () => {
   const { mutateAsync: uploadImage, isPending: isUploadingImage } = useMutation({
     mutationKey: ["uploadImage"],
     mutationFn: async (formData: FormData) => {
-      console.log(formData)
-      const { data: responseData } = await api.post<IImage>("/images", formData)
-      console.log(responseData)
+      await api.post<IImage>("/images", formData)
 
       queryClient.invalidateQueries({ queryKey: ["images"] })
 
+    },
+  })
+
+  const { mutateAsync: deleteImage, isPending: isDeletingImage } = useMutation({
+    mutationKey: ["deleteImage"],
+    mutationFn: async (imageId: string) => {
+      await api.delete<IImage>(`/images/${imageId}`)
+
+      queryClient.invalidateQueries({ queryKey: ["images"] })
     },
   })
 
@@ -32,6 +39,8 @@ export const useImages = () => {
     images,
     isLoadingImages,
     uploadImage,
-    isUploadingImage
+    isUploadingImage,
+    deleteImage,
+    isDeletingImage
   }
 }
