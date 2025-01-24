@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/form"
 import ImageInput from "./ui/image-input"
 import { Input } from "./ui/input"
+import { useImages } from "@/hooks/use-image"
 
 const formSchema = z.object({
   image: z
@@ -23,6 +24,7 @@ const formSchema = z.object({
 })
 
 export default function ImageInputForm() {
+  const { uploadImage, isUploadingImage } = useImages()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -32,8 +34,18 @@ export default function ImageInputForm() {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const formData = new FormData()
+    formData.append('image', values.image)
+    if (values.title) formData.append('title', values.title)
+    if (values.alt) formData.append('alt', values.alt)
+    console.log(formData)
+    try {
+      await uploadImage(formData)
+
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
@@ -79,7 +91,7 @@ export default function ImageInputForm() {
             )}
           />
 
-          <Button type="submit" className="w-full">Enviar</Button>
+          <Button type="submit" className="w-full" isLoading={isUploadingImage}>Enviar</Button>
         </form>
       </Form>
     )
